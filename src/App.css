@@ -14,8 +14,39 @@
 @keyframes slide-in {
     from {
         transform: translateX(-100%);
+        /* opacity: 0; */
     }
     to {
         transform: translateX(0%);
+        opacity: 1;
     }
+}
+
+@keyframes show-up {
+    from {
+        transform: translateY(-20%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0%);
+        opacity: 1;
+    }
+}
+
+.history-cards-column::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.cards-column {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+}
+
+.weather-card {
+    animation: slide-in 500ms;
+}
+
+.current-weather {
+    animation: show-up 500ms;
 }

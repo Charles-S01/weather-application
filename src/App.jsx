@@ -2,8 +2,10 @@ import { useCallback, useEffect, useMemo, useState } from "react"
 import reactLogo from "./assets/react.svg"
 import viteLogo from "/vite.svg"
 import "./App.css"
-import { useMatch, useNavigate, useParams } from "react-router-dom"
+import { Link, useMatch, useNavigate, useParams } from "react-router-dom"
 import useData from "./hooks/UseData"
+import WeatherCard from "./WeatherCard"
+import { v4 as uuidv4 } from "uuid"
 
 function App() {
     const navigate = useNavigate()
@@ -12,31 +14,50 @@ function App() {
     const { city } = useParams()
     const [cityInput, setCityInput] = useState("")
     const { data, loading, error } = useData(city)
+    const [currData, setCurrData] = useState(null)
     const [history, setHistory] = useState(() => {
         const storedHistory = localStorage.getItem("history")
         return storedHistory ? JSON.parse(storedHistory) : []
     })
+    const [favorites, setFavorites] = useState(() => {
+        const storedFavorites = localStorage.getItem("favorites")
+        return storedFavorites ? JSON.parse(storedFavorites) : []
+    })
+    const [cityFocus, setCityFocus] = useState(null)
 
     console.log("APP render")
 
     useEffect(() => {
-        // console.log("attempting useEffect 1")
         if (data) {
-            // console.log("useffect 1 run. attempting setHistory")
-            if (!history.includes(data.resolvedAddress)) {
-                // console.log("set history")
-                setHistory([...history, data.resolvedAddress])
+            setCurrData(data)
+            setCityFocus(data.resolvedAddress)
+            if (
+                !history.some(
+                    (item) => item.resolvedCity === data.resolvedAddress,
+                ) &&
+                !favorites.some(
+                    (favCity) => data.resolvedAddress === favCity.city,
+                )
+            ) {
+                setHistory([
+                    ...history,
+                    { resolvedCity: data.resolvedAddress, id: uuidv4() },
+                ])
             }
         }
     }, [data])
 
     useEffect(() => {
-        // console.log("attempting useEffect 2")
         if (data) {
-            // console.log("useffect 2 run. (setting storage)")
             localStorage.setItem("history", JSON.stringify(history))
         }
     }, [history])
+
+    useEffect(() => {
+        if (data) {
+            localStorage.setItem("favorites", JSON.stringify(favorites))
+        }
+    }, [favorites])
 
     function handleCitySubmit(e) {
         e.preventDefault()
@@ -50,7 +71,21 @@ function App() {
 
     function handleClear() {
         setHistory([])
+        setFavorites([])
         navigate(`/nyc`)
+    }
+
+    function handleCardClick(city, id, starClicked) {
+        setCityFocus(city)
+    }
+
+    function handleStarClick(city, id) {
+        if (!favorites.some((item) => item.city === city)) {
+            setFavorites([...favorites, { city: city, id: id }])
+        }
+        const newHistory = history.filter((item) => item.resolvedCity !== city)
+        // console.log(`New history: ${JSON.stringify(newHistory)}`)
+        setHistory(newHistory)
     }
 
     if (loading) {
@@ -75,27 +110,82 @@ function App() {
                 <div className="app-wrapper flex flex-1">
                     {/* {showSideBar && ( */}
                     <div
-                        className={`sidebar flex overflow-hidden text-nowrap ${showSideBar ? "w-80" : "w-0"} box-border flex-col border-r-2 border-black text-xl transition-all duration-300`}
+                        className={`sidebar flex text-nowrap ${showSideBar ? "w-96" : "w-0"} box-border flex-col overflow-hidden border-r-0 border-cyan-700 border-opacity-50 text-xl transition-all duration-500`}
                     >
-                        <div className="top-thing flex justify-between">
-                            <p>history</p>
+                        <div className="top-bar flex justify-between p-5">
+                            <p></p>
                             <button onClick={handleClear} className="">
                                 Clear
                             </button>
                         </div>
-                        {data &&
-                            history.map((item, index) => {
-                                return <p key={index}>{item}</p>
-                            })}
+                        <div className="cards-column mt-0 box-border flex flex-1 flex-col gap-14 overflow-scroll p-5">
+                            {favorites[0] !== undefined && (
+                                <div className="favorites-cards flex flex-col gap-5">
+                                    <p>Favorites</p>
+                                    {data &&
+                                        favorites.map((item) => {
+                                            return (
+                                                <Link to={`/${item.city}`}>
+                                                    <WeatherCard
+                                                        key={item.id}
+                                                        id={item.id}
+                                                        city={item.city}
+                                                        handleClick={
+                                                            handleCardClick
+                                                        }
+                                                        handleStarClick={
+                                                            handleStarClick
+                                                        }
+                                                        isStarred={favorites.some(
+                                                            (favCity) =>
+                                                                favCity.city ===
+                                                                item.city,
+                                                        )}
+                                                        isFocused={
+                                                            cityFocus ===
+                                                            item.city
+                                                        }
+                                                    />
+                                                </Link>
+                                            )
+                                        })}
+                                </div>
+                            )}
+                            <div className="history-cards flex flex-1 flex-col gap-5">
+                                <p>Viewed</p>
+                                {data &&
+                                    history.map((item) => {
+                                        return (
+                                            <Link to={`/${item.resolvedCity}`}>
+                                                <WeatherCard
+                                                    key={item.id}
+                                                    id={item.id}
+                                                    city={item.resolvedCity}
+                                                    handleClick={
+                                                        handleCardClick
+                                                    }
+                                                    handleStarClick={
+                                                        handleStarClick
+                                                    }
+                                                    isFocused={
+                                                        cityFocus ===
+                                                        item.resolvedCity
+                                                    }
+                                                />
+                                            </Link>
+                                        )
+                                    })}
+                            </div>
+                        </div>
                     </div>
                     {/* )} */}
                     <main className="content flex flex-1 flex-col">
-                        <div className="search-flex flex items-center justify-between">
+                        <div className="top-bar-flex flex items-center justify-between p-5">
                             <button
                                 onClick={() => {
                                     setShowSideBar(!showSideBar)
                                 }}
-                                className="self-start p-3"
+                                className="self-start p-0"
                             >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -113,7 +203,7 @@ function App() {
 
                             <form
                                 onSubmit={handleCitySubmit}
-                                className="flex gap-2 p-4"
+                                className="flex gap-2 p-0"
                             >
                                 <input
                                     type="text"
@@ -126,19 +216,23 @@ function App() {
                             </form>
                         </div>
                         <div className="WEATHER-content mt-16 flex flex-1 flex-col text-2xl">
-                            <div className="CURRENT-weather flex flex-col items-center justify-center drop-shadow-2xl">
-                                <p className="city-name text-4xl">
-                                    {data.resolvedAddress}
-                                </p>
-                                <p className="temp text-5xl">
-                                    {Math.round(data.currentConditions.temp)}
-                                </p>
-                                <p>{`Feels like: ${data.currentConditions.feelslike}`}</p>
-                                <div className="highlow-flex flex gap-8">
-                                    <p>{`H: ${data.days[0].tempmax}`}</p>
-                                    <p>{`L: ${data.days[0].tempmin}`}</p>
+                            {data === currData && (
+                                <div className="current-weather flex flex-col items-center justify-center gap-3 drop-shadow-2xl">
+                                    <p className="city-name text-4xl">
+                                        {data.resolvedAddress}
+                                    </p>
+                                    <p className="temp text-5xl">
+                                        {Math.round(
+                                            data.currentConditions.temp,
+                                        )}
+                                    </p>
+                                    <p>{`Feels like: ${data.currentConditions.feelslike}`}</p>
+                                    <div className="highlow-flex flex gap-8">
+                                        <p>{`H: ${data.days[0].tempmax}`}</p>
+                                        <p>{`L: ${data.days[0].tempmin}`}</p>
+                                    </div>
                                 </div>
-                            </div>
+                            )}
                         </div>
                     </main>
                 </div>
