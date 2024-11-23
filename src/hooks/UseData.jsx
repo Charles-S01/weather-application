@@ -1,19 +1,22 @@
 import { useEffect, useState } from "react"
 
-export default function useData(city) {
+export default function useData(city, unitSystem) {
     const [data, setData] = useState(null)
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
 
     useEffect(() => {
-        let c = city || "new york"
+        const apiKey = import.meta.env.VITE_KEY
+
+        let c = city || "toronto"
+        const unit = unitSystem === "metric" ? "uk" : "us"
 
         // const timeout = setTimeout(() => {
         fetch(
-            `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${c}?unitGroup=us&key=SMQS99NQCQX3DRDEPXYC6HPVK&contentType=json`,
+            `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${c}?unitGroup=${unit}&key=${apiKey}&contentType=json`,
         )
             .then((response) => {
-                if (!response.ok) {
+                if (response >= 400) {
                     throw new Error("Server error")
                 }
                 return response.json()
@@ -27,7 +30,7 @@ export default function useData(city) {
         // }, 1000)
 
         // return () => clearTimeout(timeout)
-    }, [city])
+    }, [city, unitSystem])
 
     return { data, loading, error }
 }
