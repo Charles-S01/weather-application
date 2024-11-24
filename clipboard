@@ -1,1 +1,0 @@
-${showSideBar ? "translate-x-0" : "translate-x-[-100%]"}

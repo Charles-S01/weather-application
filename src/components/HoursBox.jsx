@@ -2,11 +2,11 @@ import { memo, useMemo } from "react"
 import HourWeather from "./HourWeather"
 
 const HoursBox = memo(({ data, times }) => {
-    const localTime = parseInt(times.localTime?.toString().substring(0, 2))
-    // const localTime = parseInt(
-    //     data.currentConditions.datetime.substring(0, 2),
-    //     10,
-    // )
+    // const localTime = parseInt(times.localTime?.toString().substring(0, 2))
+    const localTime = parseInt(
+        data.currentConditions.datetime.substring(0, 2),
+        10,
+    )
 
     const hours = useMemo(() => {
         const day1 = data.days[0].hours.slice(localTime, localTime + 12)
@@ -18,7 +18,7 @@ const HoursBox = memo(({ data, times }) => {
     return (
         <>
             <div
-                className={`hours-box flex h-32 max-w-[60rem] overflow-x-scroll rounded-xl bg-sky-800 bg-opacity-10 p-2`}
+                className={`hours-box flex flex-1 overflow-x-scroll rounded-xl bg-sky-800 bg-opacity-10 pt-2`}
             >
                 {hours.map((item, index) => {
                     console.log("time calculated")

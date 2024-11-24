@@ -7,10 +7,6 @@
     /* background-color: yellow; */
 }
 
-/* .sidebar {
-    animation: slide-in 300ms;
-} */
-
 @keyframes slide-in {
     from {
         transform: translateX(-100%);
@@ -33,10 +29,10 @@
     }
 }
 
-@keyframes show-up {
+@keyframes fade-in-down {
     from {
-        transform: translateY(-20%);
-        opacity: 0.6;
+        transform: translateY(-2rem);
+        opacity: 0;
     }
 
     to {
@@ -45,10 +41,10 @@
     }
 }
 
-@keyframes slide-up {
+@keyframes fade-in-up {
     from {
-        transform: translateY(20%);
-        opacity: 0.5;
+        transform: translateY(2rem);
+        opacity: 0;
     }
 
     to {
@@ -64,17 +60,22 @@
 .weather-card {
     animation: slide-in 500ms;
 }
-.current-weather {
-    animation: show-up 500ms;
+.current-weather,
+.hours-box {
+    animation: fade-in-down 500ms;
+}
+
+.daily-forecast {
+    animation: fade-in-up 500ms;
 }
 
 .tabs {
     animation: slide-in 500ms;
 }
 
-.hours-box {
-    animation: show-up 500ms;
-}
+/* .hours-box {
+    animation: fade-in-down 500ms;
+} */
 
 .top-bar {
     animation: slide-down 700ms;
@@ -93,4 +94,9 @@
 .hours-box {
     -ms-overflow-style: none;
     scrollbar-width: none;
+}
+
+.weather-content-wrapper {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
 }
