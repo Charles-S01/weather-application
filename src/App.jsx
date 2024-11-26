@@ -69,7 +69,6 @@ function App() {
                     : false,
             )
             setCurrData(data)
-            // if the city is starred in history then set focus to favorites, else set focus to recents
             if (
                 history.some(
                     (item) =>
@@ -80,7 +79,6 @@ function App() {
                 setCardsTabFocus("favorites")
             } else {
                 setCardsTabFocus("recents")
-                // if it's not already in history then set it in history
                 if (
                     !history.some(
                         (item) => item.resolvedCity === data.resolvedAddress,
