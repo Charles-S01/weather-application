@@ -113,5 +113,8 @@
     scrollbar-width: none; /* Firefox */
 }
 
-@media (max-width: 1400px) {
-}
+/* @media (max-width: 1000px) {
+    .sidebar {
+        z-index: 1;
+    }
+} */

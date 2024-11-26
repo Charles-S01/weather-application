@@ -173,12 +173,11 @@ function App() {
     return (
         <>
             <div
-                className={`app m-0 box-border flex h-full w-full overflow-auto bg-gradient-to-b text-base ${isNight ? "bg-gradi/ent-to-br from-cyan-800 to-blue-900" : "bg-gra/dient-to-bl from-cyan-500 to-blue-500"} p-0 transition-all`}
+                className={`app m-0 box-border flex h-full w-full overflow-auto bg-gradient-to-b text-base max-[750px]:relative ${isNight ? "bg-gradi/ent-to-br from-cyan-800 to-blue-900" : "bg-gra/dient-to-bl from-cyan-500 to-blue-500"} p-0 transition-all`}
             >
                 <div className="app-wrapper flex max-w-[2560px] flex-1">
-                    {/* {showSideBar && ( */}
                     <div
-                        className={`sidebar m/ax-[1000px]:z-10 ma/x-[1000px]:hidden flex text-nowrap text-lg ${showSideBar ? "block w-[22rem] opacity-100" : "w-0 opacity-0"} box-border flex-col overflow-hidden border-r-0 border-cyan-700 border-opacity-50 transition-all duration-500`}
+                        className={`sidebar flex text-nowrap text-lg max-[750px]:absolute max-[750px]:z-10 max-[750px]:h-full max-[750px]:bg-black max-[750px]:bg-opacity-70 ${showSideBar ? "block w-[22rem] opacity-100 max-[750px]:w-full" : "w-0 opacity-0"} box-border flex-col overflow-hidden border-r-0 border-cyan-700 border-opacity-50 transition-all duration-500`}
                     >
                         <div className="top-bar flex justify-between overflow-hidden p-5">
                             <button
@@ -309,12 +308,7 @@ function App() {
                                 </p>
                                 <div className="weather-content-container flex flex-1 justify-center overflow-auto">
                                     <div className="WEATHER-content-width flex max-w-[60rem] flex-1 flex-col gap-8 transition-all max-[1400px]:max-w-[45rem] max-[1100px]:max-w-[23rem]">
-                                        {/* {data === currData && (
-                                    <> */}
                                         <div className="current-weather flex flex-col items-center justify-center gap-2 text-xl drop-shadow-2xl">
-                                            {/* <p className="city-name mb-4 text-4xl">
-                                                {data.resolvedAddress}
-                                            </p> */}
                                             <div className="temp-and-icon mt-1 flex gap-5">
                                                 <p className="temp text-6xl">
                                                     {Math.round(
