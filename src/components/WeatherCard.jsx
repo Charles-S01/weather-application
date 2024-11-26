@@ -48,14 +48,14 @@ export default function WeatherCard({ id, city, isStarred }) {
             {data && isNight !== null ? (
                 <Link to={`/${city}`} key={id}>
                     <div
-                        className={`weather-card group relative flex h-32 flex-shrink-0 flex-col justify-between overflow-hidden rounded-xl border-2 border-gray-50 p-2 text-xl shadow-xl transition hover:scale-105 ${cityFocus === city ? "border-opacity-100" : "border-0"} ${isNight ? "bg-gradient-to-br from-cyan-700 to-blue-900" : "bg-gradient-to-bl from-cyan-500 to-blue-500"}`}
+                        className={`weather-card group relative flex h-32 flex-shrink-0 flex-col justify-between overflow-hidden rounded-xl border-gray-50 p-3 text-lg shadow-xl transition hover:scale-105 ${cityFocus === city ? "border-2 border-opacity-100" : "border-0"} ${isNight ? "bg-gradient-to-br from-cyan-700 to-blue-900" : "bg-gradient-to-bl from-cyan-500 to-blue-500"}`}
                     >
                         <button
                             onClick={(e) => {
                                 e.preventDefault()
                                 handleStarClick(city, isStarred)
                             }}
-                            className={`absolute right-1 top-1 ${isStarred ? "opacity-0" : "opacity-0"} group-hover:opacity-100`}
+                            className={`absolute right-1 top-1 group-hover:opacity-100`}
                         >
                             {isStarred ? (
                                 <svg
@@ -89,12 +89,15 @@ export default function WeatherCard({ id, city, isStarred }) {
                         </button>
 
                         <div className="flex">
-                            <p className="mr-4 flex-1 overflow-hidden text-ellipsis">
+                            <p className="mr-5 flex-1 overflow-hidden text-ellipsis">
                                 {city}
                             </p>
                         </div>
-                        <div className="conditions flex items-center justify-end text-3xl">
-                            <p className="">{`${Math.round(data.currentConditions.temp)}\u00B0`}</p>
+                        <div className="conditions flex items-center">
+                            <p className="mr-auto self-end">
+                                {data.currentConditions.conditions}
+                            </p>
+                            <p className="text-3xl">{`${Math.round(data.currentConditions.temp)}\u00B0`}</p>
                             <div className="">
                                 <WeatherIcon
                                     iconDescription={

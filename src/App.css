@@ -1,11 +1,10 @@
-.allbody {
+/* .allbody {
     height: 100%;
     width: 100%;
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    /* background-color: yellow; */
-}
+} */
 
 @keyframes slide-in {
     from {
@@ -53,6 +52,18 @@
     }
 }
 
+@keyframes fade-in-to-left {
+    from {
+        transform: translateX(2rem);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0%);
+        opacity: 1;
+    }
+}
+
 .history-cards-column::-webkit-scrollbar {
     display: none;
 }
@@ -61,11 +72,12 @@
     animation: slide-in 500ms;
 }
 .current-weather,
+.city-name,
 .hours-box {
     animation: fade-in-down 500ms;
 }
 
-.daily-forecast {
+.section-3 {
     animation: fade-in-up 500ms;
 }
 
@@ -96,7 +108,10 @@
     scrollbar-width: none;
 }
 
-.weather-content-wrapper {
+.weather-content-container {
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
+}
+
+@media (max-width: 1400px) {
 }

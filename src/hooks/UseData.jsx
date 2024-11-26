@@ -8,8 +8,8 @@ export default function useData(city, unitSystem) {
     useEffect(() => {
         const apiKey = import.meta.env.VITE_KEY
 
-        let c = city || "toronto"
-        const unit = unitSystem === "metric" ? "uk" : "us"
+        let c = city ? city : "toronto"
+        const unit = unitSystem === "metric" ? "metric" : "us"
 
         // const timeout = setTimeout(() => {
         fetch(
