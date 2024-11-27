@@ -2,7 +2,7 @@ import { memo, useContext, useMemo } from "react"
 import HourWeather from "./HourWeather"
 import { CurrentWeatherContext } from "../App"
 
-const HoursBox = memo(({ times }) => {
+function HoursBox() {
     const { isNight, data } = useContext(CurrentWeatherContext)
 
     const localTime = parseInt(
@@ -45,6 +45,6 @@ const HoursBox = memo(({ times }) => {
             </div>
         </>
     )
-})
+}
 
 export default HoursBox
