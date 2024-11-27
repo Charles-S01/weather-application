@@ -20,7 +20,10 @@ export const CurrentWeatherContext = createContext()
 
 function App() {
     const navigate = useNavigate()
-    const [showSideBar, setShowSideBar] = useState(true)
+    const [showSideBar, setShowSideBar] = useState(() => {
+        const storedPreference = localStorage.getItem("showSideBar")
+        return storedPreference !== null ? storedPreference === "true" : true
+    })
 
     const { city } = useParams()
     const [unitSystem, setUnitSystem] = useState(() => {
@@ -104,6 +107,10 @@ function App() {
         }
     }, [history])
 
+    useEffect(() => {
+        localStorage.setItem("showSideBar", showSideBar)
+    }, [showSideBar])
+
     function handleCitySubmit(e) {
         e.preventDefault()
         if (cityInput) {
@@ -177,7 +184,7 @@ function App() {
             >
                 <div className="app-wrapper flex max-w-[2560px] flex-1">
                     <div
-                        className={`sidebar flex text-nowrap text-lg max-[750px]:absolute max-[750px]:z-10 max-[750px]:h-full max-[750px]:bg-opacity-70 max-[750px]:backdrop-blur-md ${showSideBar ? "block w-[22rem] opacity-100 max-[750px]:w-full" : "w-0 opacity-0"} box-border flex-col overflow-hidden border-r-0 border-cyan-700 border-opacity-50 transition-all duration-500`}
+                        className={`sidebar flex text-nowrap text-lg max-[750px]:absolute max-[750px]:z-20 max-[750px]:h-full max-[750px]:bg-opacity-70 max-[750px]:backdrop-blur-md ${showSideBar ? "block w-[22rem] opacity-100 max-[750px]:w-full" : "w-0 opacity-0"} box-border flex-col overflow-hidden border-r-0 border-cyan-700 border-opacity-50 transition-all duration-500`}
                     >
                         <div className="top-bar flex justify-between overflow-hidden p-5">
                             <button
@@ -237,8 +244,8 @@ function App() {
                         </div>
                     </div>
 
-                    <main className="content flex flex-1 flex-col">
-                        <div className="main-top-bar flex items-center justify-between gap-5 p-5 max-[1100px]:text-sm">
+                    <main className="content flex flex-1 flex-col overflow-auto">
+                        <div className="main-top-bar sticky z-10 flex items-center justify-between gap-5 p-5 backdrop-blur-md max-[1100px]:text-sm">
                             <button
                                 onClick={() => {
                                     setShowSideBar(!showSideBar)
@@ -300,13 +307,15 @@ function App() {
 
                         {data === currData && (
                             <>
-                                <p className="city-name sticky top-0 mb-4 mt-12 self-center text-3xl drop-shadow-2xl">
-                                    {data.resolvedAddress
-                                        .split(",")
-                                        .slice(0, 2)
-                                        .join(",")}
-                                </p>
-                                <div className="weather-content-container flex flex-1 justify-center overflow-auto">
+                                <div className="city-name-wrapper sticky top-0 z-10 mb-4 mt-16 flex justify-center p-1 backdrop-blur-md">
+                                    <p className="city-name self-center rounded-lg text-3xl drop-shadow-2xl">
+                                        {data.resolvedAddress
+                                            .split(",")
+                                            .slice(0, 2)
+                                            .join(",")}
+                                    </p>
+                                </div>
+                                <div className="weather-content-container o/verflow-auto flex flex-1 justify-center">
                                     <div className="WEATHER-content-width flex max-w-[60rem] flex-1 flex-col gap-8 transition-all max-[1400px]:max-w-[45rem] max-[1100px]:max-w-[23rem]">
                                         <div className="current-weather flex flex-col items-center justify-center gap-2 text-xl drop-shadow-2xl">
                                             <div className="temp-and-icon mt-1 flex gap-5">
