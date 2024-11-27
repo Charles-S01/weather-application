@@ -36,72 +36,82 @@ function App() {
         const storedHistory = localStorage.getItem("history")
         return storedHistory ? JSON.parse(storedHistory) : []
     })
-    const [isNight, setIsNight] = useState(null)
 
     const [cityInput, setCityInput] = useState("")
-    const [cityFocus, setCityFocus] = useState(null)
     const [cardsTabFocus, setCardsTabFocus] = useState("recents")
 
     console.log("APP render")
 
+    const cityFocus = data?.resolvedAddress
+
+    const isNight = useMemo(() => {
+        const localTime = parseInt(
+            data?.currentConditions.datetime
+                .substring(0, 2)
+                .concat(data.currentConditions.datetime.substring(3, 5)),
+            10,
+        )
+        const sunsetTime = parseInt(
+            data?.currentConditions.sunset
+                .substring(0, 2)
+                .concat(data.currentConditions.datetime.substring(3, 5)),
+            10,
+        )
+        const sunriseTime = parseInt(
+            data?.currentConditions.sunrise
+                .substring(0, 2)
+                .concat(data.currentConditions.datetime.substring(3, 5)),
+            10,
+        )
+        return sunsetTime && sunriseTime
+            ? (localTime > sunsetTime && localTime < 2360) ||
+                  (localTime < sunriseTime && localTime >= 0)
+            : false
+    }, [data])
+
+    // const cardsTabFocus = useMemo(() => {
+    //     console.log("cardstabfocus memo ran")
+    //     return history.some(
+    //         (item) =>
+    //             item.resolvedCity === data?.resolvedAddress && item.starred,
+    //     )
+    //         ? "favorites"
+    //         : "recents"
+    // }, [cardsTabFocuss, data])
+
     useEffect(() => {
         if (data) {
-            setCityFocus(data.resolvedAddress)
-            const localTime = parseInt(
-                data.currentConditions.datetime
-                    .substring(0, 2)
-                    .concat(data.currentConditions.datetime.substring(3, 5)),
-                10,
-            )
-            const sunsetTime = parseInt(
-                data.currentConditions.sunset
-                    .substring(0, 2)
-                    .concat(data.currentConditions.datetime.substring(3, 5)),
-                10,
-            )
-            const sunriseTime = parseInt(
-                data.currentConditions.sunrise
-                    .substring(0, 2)
-                    .concat(data.currentConditions.datetime.substring(3, 5)),
-                10,
-            )
-            setIsNight(
-                sunsetTime && sunriseTime
-                    ? (localTime > sunsetTime && localTime < 2360) ||
-                          (localTime < sunriseTime && localTime >= 0)
-                    : false,
-            )
             setCurrData(data)
-            if (
-                history.some(
+            setCardsTabFocus(() => {
+                return history.some(
                     (item) =>
-                        item.resolvedCity === data.resolvedAddress &&
+                        item.resolvedCity === data?.resolvedAddress &&
                         item.starred,
                 )
-            ) {
-                setCardsTabFocus("favorites")
-            } else {
-                setCardsTabFocus("recents")
-                if (
-                    !history.some(
-                        (item) => item.resolvedCity === data.resolvedAddress,
-                    )
-                ) {
-                    setHistory([
-                        {
-                            resolvedCity: data.resolvedAddress,
-                            starred: false,
-                            id: uuidv4(),
-                        },
-                        ...history,
-                    ])
-                }
-            }
+                    ? "favorites"
+                    : "recents"
+            })
+
+            setHistory(() => {
+                return !history.some(
+                    (item) => item.resolvedCity === data.resolvedAddress,
+                )
+                    ? [
+                          {
+                              resolvedCity: data.resolvedAddress,
+                              starred: false,
+                              id: uuidv4(),
+                          },
+                          ...history,
+                      ]
+                    : history
+            })
         }
     }, [data])
 
     useEffect(() => {
         if (data) {
+            // console.log("useEffect [history] ran")
             const saved = history.filter((item) => item.starred)
             localStorage.setItem("history", JSON.stringify(saved))
         }
@@ -129,30 +139,22 @@ function App() {
         navigate(`/toronto`)
     }
 
-    function handleCardClick(city, starClicked) {
-        // setCityFocus(city)
-    }
+    // function handleCardClick(city, starClicked) {
+    //     setCityFocus(city)
+    // }
 
     function handleStarClick(city, isStarred) {
+        setHistory(() => {
+            return history.map((item) => {
+                return item.resolvedCity === city
+                    ? { ...item, starred: !item.starred }
+                    : item
+            })
+        })
         if (!isStarred) {
-            setHistory(
-                history.map((item) => {
-                    return item.resolvedCity === city
-                        ? { ...item, starred: true }
-                        : item
-                }),
-            )
             setTimeout(() => {
                 setCardsTabFocus("favorites")
             }, 100)
-        } else if (isStarred) {
-            setHistory(
-                history.map((item) => {
-                    return item.resolvedCity === city
-                        ? { ...item, starred: false }
-                        : item
-                }),
-            )
         }
     }
 
@@ -245,7 +247,7 @@ function App() {
                     </div>
 
                     <main className="content flex flex-1 flex-col overflow-auto">
-                        <div className="main-top-bar sticky z-10 flex items-center justify-between gap-5 p-5 backdrop-blur-md max-[1100px]:text-sm">
+                        <div className="main-top-bar sticky flex items-center justify-between gap-5 p-5 max-[1100px]:text-sm">
                             <button
                                 onClick={() => {
                                     setShowSideBar(!showSideBar)

@@ -18,7 +18,7 @@ export default function DailyForecast({}) {
         const date = new Date(
             Date.UTC(dateParts[0], dateParts[1] - 1, dateParts[2]),
         )
-        console.log(`Parsed date: ${date}, Original date string: ${d}`)
+        // console.log(`Parsed date: ${date}, Original date string: ${d}`)
 
         return daysOfWeek[date.getUTCDay()]
     }
