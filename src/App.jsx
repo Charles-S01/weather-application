@@ -177,7 +177,7 @@ function App() {
             >
                 <div className="app-wrapper flex max-w-[2560px] flex-1">
                     <div
-                        className={`sidebar flex text-nowrap text-lg max-[750px]:absolute max-[750px]:z-10 max-[750px]:h-full max-[750px]:bg-black max-[750px]:bg-opacity-70 ${showSideBar ? "block w-[22rem] opacity-100 max-[750px]:w-full" : "w-0 opacity-0"} box-border flex-col overflow-hidden border-r-0 border-cyan-700 border-opacity-50 transition-all duration-500`}
+                        className={`sidebar flex text-nowrap text-lg max-[750px]:absolute max-[750px]:z-10 max-[750px]:h-full max-[750px]:bg-opacity-70 max-[750px]:backdrop-blur-md ${showSideBar ? "block w-[22rem] opacity-100 max-[750px]:w-full" : "w-0 opacity-0"} box-border flex-col overflow-hidden border-r-0 border-cyan-700 border-opacity-50 transition-all duration-500`}
                     >
                         <div className="top-bar flex justify-between overflow-hidden p-5">
                             <button
