@@ -1,5 +1,5 @@
 import { useContext } from "react"
-import { CurrentWeatherContext } from "./App"
+import { CurrentWeatherContext } from "../App"
 
 export default function WindRain({}) {
     const { isNight, data, unitSystem } = useContext(CurrentWeatherContext)

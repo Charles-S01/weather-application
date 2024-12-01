@@ -12,7 +12,7 @@ import HourWeather from "./components/HourWeather"
 import HoursBox from "./components/HoursBox"
 import DailyForecast from "./components/DailyForecast"
 import SusnetSunrise from "./components/SunsetSunrise"
-import WindRain from "./WindRain"
+import WindRain from "./components/WindRain"
 import CurrentTempDetails from "./components/CurrentTempDetails"
 
 export const MyContext = createContext({})
@@ -20,10 +20,6 @@ export const CurrentWeatherContext = createContext()
 
 function App() {
     const navigate = useNavigate()
-    const [showSideBar, setShowSideBar] = useState(() => {
-        const storedPreference = localStorage.getItem("showSideBar")
-        return storedPreference !== null ? storedPreference === "true" : true
-    })
 
     const { city } = useParams()
     const [unitSystem, setUnitSystem] = useState(() => {
@@ -39,6 +35,10 @@ function App() {
 
     const [cityInput, setCityInput] = useState("")
     const [cardsTabFocus, setCardsTabFocus] = useState("recents")
+    const [showSideBar, setShowSideBar] = useState(() => {
+        const storedPreference = localStorage.getItem("showSideBar")
+        return storedPreference !== null ? storedPreference === "true" : true
+    })
 
     console.log("APP render")
 
@@ -138,10 +138,6 @@ function App() {
         setHistory([])
         navigate(`/toronto`)
     }
-
-    // function handleCardClick(city, starClicked) {
-    //     setCityFocus(city)
-    // }
 
     function handleStarClick(city, isStarred) {
         setHistory(() => {

@@ -2,7 +2,7 @@ import starIcon from "../assets/star.svg"
 import hiddenStarIcon from "../assets/hidden-star.svg"
 import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
-import { useContext } from "react"
+import { useContext, useMemo } from "react"
 import { MyContext } from "../App"
 import useData from "../hooks/UseData"
 import WeatherIcon from "./WeatherIcon"
@@ -10,35 +10,30 @@ import WeatherIcon from "./WeatherIcon"
 export default function WeatherCard({ id, city, isStarred }) {
     const { unitSystem, handleStarClick, cityFocus } = useContext(MyContext)
     const { data, loading, error } = useData(city, unitSystem)
-    const [isNight, setIsNight] = useState(null)
 
-    useEffect(() => {
-        if (data) {
-            const localTime = parseInt(
-                data.currentConditions.datetime
-                    .substring(0, 2)
-                    .concat(data.currentConditions.datetime.substring(3, 5)),
-                10,
-            )
-            const sunsetTime = parseInt(
-                data.currentConditions.sunset
-                    .substring(0, 2)
-                    .concat(data.currentConditions.datetime.substring(3, 5)),
-                10,
-            )
-            const sunriseTime = parseInt(
-                data.currentConditions.sunrise
-                    .substring(0, 2)
-                    .concat(data.currentConditions.datetime.substring(3, 5)),
-                10,
-            )
-            setIsNight(
-                sunsetTime && sunriseTime
-                    ? (localTime > sunsetTime && localTime < 2360) ||
-                          (localTime < sunriseTime && localTime >= 0)
-                    : false,
-            )
-        }
+    const isNight = useMemo(() => {
+        const localTime = parseInt(
+            data?.currentConditions.datetime
+                .substring(0, 2)
+                .concat(data.currentConditions.datetime.substring(3, 5)),
+            10,
+        )
+        const sunsetTime = parseInt(
+            data?.currentConditions.sunset
+                .substring(0, 2)
+                .concat(data.currentConditions.datetime.substring(3, 5)),
+            10,
+        )
+        const sunriseTime = parseInt(
+            data?.currentConditions.sunrise
+                .substring(0, 2)
+                .concat(data.currentConditions.datetime.substring(3, 5)),
+            10,
+        )
+        return sunsetTime && sunriseTime
+            ? (localTime > sunsetTime && localTime < 2360) ||
+                  (localTime < sunriseTime && localTime >= 0)
+            : false
     }, [data])
 
     console.log("WeatherCard render")

@@ -35,7 +35,6 @@ function HoursBox() {
                     return (
                         <HourWeather
                             key={index}
-                            // time={index === 0 ? "Now" : time}
                             time={time}
                             icon={item.icon}
                             temp={item.temp}
