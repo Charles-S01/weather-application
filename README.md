@@ -1,6 +1,9 @@
+# Weather Application
+
+## Description
 A visually appealing weather application where users can search and view live weather data and also bookmark their favourite locations 
 
-Built using:
+## Languages/Frameworks
 * JavaScript, React.js, Tailwind CSS, Vanilla CSS, HTML
 
 ![8F27B169-0516-47E8-A2AF-CD63D30A5760_1_201_a](https://github.com/user-attachments/assets/f4187282-7c59-4b79-93a0-e6cd3dcd3d85)
